@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ContaRequest;
 use App\Models\Conta;
+use App\Models\SituacaoConta;
 use Barryvdh\DomPDF\Facade\PDF;
 use Exception;
 use Illuminate\Http\Request;
@@ -52,7 +53,10 @@ class ContaController extends Controller
     // Carregar o formulário cadastrar nova conta
     public function create()
     {
-        return view('contas.create');
+        // Recuperar os registros da tabela situacao_contas do banco de dados
+        $situacoesContas = SituacaoConta::orderBy('nome', 'asc')->get();
+        
+        return view('contas.create', ['situacoesContas' => $situacoesContas]);
     }
 
 
@@ -68,7 +72,8 @@ class ContaController extends Controller
             $conta = Conta::create([
                 'nome' => $request->nome,
                 'valor' => str_replace(',','.', str_replace('.','',$request->valor)),
-                'vencimento' => $request->vencimento
+                'vencimento' => $request->vencimento,
+                'situacao_conta_id' => $request->situacao_conta_id,
             ]);
 
             // Redirecionar o usuário, enviar mensagem de sucesso
@@ -85,7 +90,13 @@ class ContaController extends Controller
     // Carregar o formulário editar a conta
     public function edit(Conta $conta)
     {
-        return view('contas.edit', ['conta' => $conta]);
+
+        $situacoesContas = SituacaoConta::orderBy('nome', 'asc')->get();
+
+        return view('contas.edit', [
+            'conta' => $conta,
+            'situacoesContas' => $situacoesContas,
+        ]);
     }
 
     // Editar no banco de Dados a Conta
@@ -99,7 +110,8 @@ class ContaController extends Controller
         $conta->update([
             'nome' => $request->nome,
             'valor' => str_replace(',','.', str_replace('.','',$request->valor)),
-            'vencimento' => $request->vencimento
+            'vencimento' => $request->vencimento,
+            'situacao_conta_id' => $request->situacao_conta_id,
         ]);
         
         // Redirecionar o usuário, enviar mensagem de sucesso

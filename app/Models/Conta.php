@@ -14,6 +14,7 @@ class Conta extends Model
         'nome',
         'valor',
         'vencimento',
+        'situacao_conta_id'
     ];
 
     public function situacaoConta(){
