@@ -15,4 +15,9 @@ class Conta extends Model
         'valor',
         'vencimento',
     ];
+
+    public function situacaoConta(){
+        return $this->belongsTo(SituacaoConta::class);
+    }
+
 }

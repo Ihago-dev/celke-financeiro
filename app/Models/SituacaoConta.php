@@ -17,4 +17,8 @@ class SituacaoConta extends Model
         'nome',
         'cor',
     ];
+
+    public function conta(){
+        return $this->hasMany(Conta::class);
+    }
 }
